@@ -162,17 +162,22 @@ const OSWT_ASSETS = {
 }
 
 // ─── Status Config ───────────────────────────────────────────
-const statusConfig: Record<string, { label: string; bgClass: string }> = {
-  green: { label: 'Stocked', bgClass: 'bg-green-900/40 text-green-400 border border-green-700/50' },
-  yellow: { label: 'Low', bgClass: 'bg-yellow-900/40 text-yellow-400 border border-yellow-700/50' },
-  red: { label: 'Order Needed', bgClass: 'bg-red-900/40 text-red-400 border border-red-700/50' },
-  critical: { label: 'Critical', bgClass: 'bg-red-950/60 text-red-300 border border-red-600/50 animate-blink-critical' },
+const statusConfig: Record<string, { label: string; bgClass: string; dotClass: string }> = {
+  green: { label: 'Stocked', bgClass: 'bg-emerald-950/40 text-emerald-300 border-emerald-800/50', dotClass: 'bg-emerald-400/80' },
+  yellow: { label: 'Low', bgClass: 'bg-amber-950/40 text-amber-300 border-amber-800/50', dotClass: 'bg-amber-400/80' },
+  red: { label: 'Order Needed', bgClass: 'bg-rose-950/40 text-rose-300 border-rose-800/50', dotClass: 'bg-rose-400/80' },
+  critical: { label: 'Critical', bgClass: 'bg-rose-950/60 text-rose-200 border-rose-700/60', dotClass: 'bg-rose-300/90 animate-pulse-precision' },
 }
 
 // ─── Helpers ─────────────────────────────────────────────────
 function getStatusBadge(status: string) {
   const config = statusConfig[status] ?? statusConfig['green']
-  return <span className={`inline-flex items-center px-2 py-0.5 rounded-full text-xs font-medium ${config.bgClass}`}>{config.label}</span>
+  return (
+    <span className={`bespoken-status-badge ${config.bgClass}`}>
+      <span className={`status-dot mr-1.5 ${config.dotClass}`} />
+      {config.label}
+    </span>
+  )
 }
 
 function formatDate(dateStr: string, mounted: boolean = true) {
@@ -224,9 +229,9 @@ function getClinicWorstStatus(clinicId: string, inventory: InventoryItem[]): str
 }
 
 const priorityConfig: Record<string, { label: string; cls: string }> = {
-  critical: { label: 'Critical', cls: 'bg-red-900/50 text-red-300 border-red-600/50' },
-  high: { label: 'High', cls: 'bg-orange-900/50 text-orange-300 border-orange-600/50' },
-  medium: { label: 'Medium', cls: 'bg-yellow-900/50 text-yellow-300 border-yellow-600/50' },
+  critical: { label: 'Critical', cls: 'bg-rose-950/50 text-rose-200 border-rose-700/50' },
+  high: { label: 'High', cls: 'bg-amber-950/40 text-amber-300 border-amber-800/50' },
+  medium: { label: 'Medium', cls: 'bg-zinc-900/60 text-zinc-300 border-zinc-700/50' },
 }
 
 // ─── Navigation Items ────────────────────────────────────────
@@ -278,8 +283,8 @@ function Sidebar({ activeScreen, setActiveScreen, collapsed, setCollapsed }: {
       <div className="p-4 flex items-center justify-between border-b border-border">
         {!collapsed && (
           <div className="flex items-center gap-2">
-            <div className="w-8 h-8 rounded-lg bg-[hsl(34,28%,38%)] flex items-center justify-center">
-              <FiCrosshair className="w-4 h-4 text-[hsl(30,12%,94%)]" />
+            <div className="w-8 h-8 rounded-lg bg-emerald-900 flex items-center justify-center">
+              <FiCrosshair className="w-4 h-4 text-emerald-50" />
             </div>
             <span className="font-serif font-bold text-lg text-foreground tracking-tight">XTrackedOS</span>
           </div>
@@ -296,9 +301,9 @@ function Sidebar({ activeScreen, setActiveScreen, collapsed, setCollapsed }: {
             <button
               key={item.id}
               onClick={() => setActiveScreen(item.id)}
-              className={`w-full flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium transition-all duration-200 ${isActive ? 'bg-[hsl(34,28%,38%)]/20 text-[hsl(34,22%,62%)] border border-[hsl(34,28%,38%)]/30' : 'text-muted-foreground hover:text-foreground hover:bg-secondary'}`}
+              className={`w-full flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium transition-all duration-200 ${isActive ? 'bg-emerald-900/20 text-emerald-200 border border-emerald-700/30' : 'text-muted-foreground hover:text-foreground hover:bg-secondary'}`}
             >
-              <Icon className={`w-4 h-4 flex-shrink-0 ${isActive ? 'text-[hsl(34,22%,62%)]' : ''}`} />
+              <Icon className={`w-4 h-4 flex-shrink-0 ${isActive ? 'text-emerald-200' : ''}`} />
               {!collapsed && <span>{item.label}</span>}
             </button>
           )
@@ -328,7 +333,7 @@ function HeaderBar({ activeScreen, notificationCount }: { activeScreen: string; 
           <FiBell className="w-5 h-5" />
         </button>
         {notificationCount > 0 && (
-          <span className="absolute -top-0.5 -right-0.5 w-4 h-4 bg-red-600 text-white text-[10px] font-bold rounded-full flex items-center justify-center">{notificationCount}</span>
+          <span className="absolute -top-0.5 -right-0.5 w-4 h-4 bg-rose-500 text-white text-[10px] font-bold rounded-full flex items-center justify-center">{notificationCount}</span>
         )}
       </div>
     </div>
@@ -337,7 +342,7 @@ function HeaderBar({ activeScreen, notificationCount }: { activeScreen: string; 
 
 // ─── Status Message Banner ───────────────────────────────────
 function StatusBanner({ message, onClose }: { message: StatusMessage; onClose: () => void }) {
-  const cls = message.type === 'success' ? 'bg-green-900/30 text-green-400 border border-green-700/40' : message.type === 'error' ? 'bg-red-900/30 text-red-400 border border-red-700/40' : 'bg-[hsl(34,28%,38%)]/20 text-[hsl(34,22%,62%)] border border-[hsl(34,28%,38%)]/40'
+  const cls = message.type === 'success' ? 'bg-emerald-950/30 text-emerald-300 border border-emerald-800/40' : message.type === 'error' ? 'bg-rose-950/30 text-rose-300 border border-rose-800/40' : 'bg-emerald-900/20 text-emerald-200 border border-emerald-700/40'
   return (
     <div className={`p-3 rounded-lg mb-4 flex items-center gap-2 text-sm ${cls}`}>
       {message.type === 'success' && <FiCheck className="w-4 h-4 flex-shrink-0" />}
@@ -387,10 +392,10 @@ function DashboardScreen({
   }
 
   const statusColors: Record<string, string> = {
-    green: 'bg-green-500',
-    yellow: 'bg-yellow-500',
-    red: 'bg-red-500',
-    critical: 'bg-red-600 animate-blink-critical',
+    green: 'bg-emerald-400/80',
+    yellow: 'bg-amber-400/80',
+    red: 'bg-rose-400/80',
+    critical: 'bg-rose-300/90 animate-pulse-precision',
   }
 
   const handleAnalyze = async () => {
@@ -488,8 +493,8 @@ function DashboardScreen({
                 <p className="text-xs text-muted-foreground">Total Clinics</p>
                 <p className="text-2xl font-bold text-foreground font-serif">{totalClinics}</p>
               </div>
-              <div className="w-10 h-10 rounded-lg bg-[hsl(34,28%,38%)]/20 flex items-center justify-center">
-                <FiMapPin className="w-5 h-5 text-[hsl(34,22%,62%)]" />
+              <div className="w-10 h-10 rounded-lg bg-emerald-900/20 flex items-center justify-center">
+                <FiMapPin className="w-5 h-5 text-emerald-200" />
               </div>
             </div>
           </CardContent>
@@ -499,10 +504,10 @@ function DashboardScreen({
             <div className="flex items-center justify-between">
               <div>
                 <p className="text-xs text-muted-foreground">Below Threshold</p>
-                <p className="text-2xl font-bold text-red-400 font-serif">{belowThreshold}</p>
+                <p className="text-2xl font-bold text-rose-300 font-serif">{belowThreshold}</p>
               </div>
-              <div className="w-10 h-10 rounded-lg bg-red-900/30 flex items-center justify-center">
-                <FiAlertTriangle className="w-5 h-5 text-red-400" />
+              <div className="w-10 h-10 rounded-lg bg-rose-950/30 flex items-center justify-center">
+                <FiAlertTriangle className="w-5 h-5 text-rose-300" />
               </div>
             </div>
           </CardContent>
@@ -512,10 +517,10 @@ function DashboardScreen({
             <div className="flex items-center justify-between">
               <div>
                 <p className="text-xs text-muted-foreground">Critical Items</p>
-                <p className="text-2xl font-bold text-red-300 font-serif">{pendingCritical}</p>
+                <p className="text-2xl font-bold text-rose-200 font-serif">{pendingCritical}</p>
               </div>
-              <div className="w-10 h-10 rounded-lg bg-red-950/30 flex items-center justify-center">
-                <FiPackage className="w-5 h-5 text-red-300" />
+              <div className="w-10 h-10 rounded-lg bg-rose-950/40 flex items-center justify-center">
+                <FiPackage className="w-5 h-5 text-rose-200" />
               </div>
             </div>
           </CardContent>
@@ -536,22 +541,22 @@ function DashboardScreen({
       </div>
 
       {/* OSWT Data Source Banner */}
-      <div className="rounded-lg border border-[hsl(34,28%,38%)]/30 bg-[hsl(34,28%,38%)]/10 p-3 flex items-center gap-3">
-        <div className="w-8 h-8 rounded-md bg-[hsl(34,28%,38%)]/20 flex items-center justify-center flex-shrink-0">
-          <FiPackage className="w-4 h-4 text-[hsl(34,22%,62%)]" />
+      <div className="rounded-lg border border-emerald-700/30 bg-emerald-900/10 p-3 flex items-center gap-3">
+        <div className="w-8 h-8 rounded-md bg-emerald-900/20 flex items-center justify-center flex-shrink-0">
+          <FiPackage className="w-4 h-4 text-emerald-200" />
         </div>
         <div className="flex-1 min-w-0">
-          <p className="text-xs font-medium text-[hsl(34,22%,62%)]">OSWT Inventory Loaded</p>
+          <p className="text-xs font-medium text-emerald-200">OSWT Inventory Loaded</p>
           <p className="text-xs text-muted-foreground mt-0.5 truncate">
             Sourced from McKesson SILO START list, OSWT Master Supply Order, and Inventory Checklist ({products.length} products / {inventory.length} tracked items)
           </p>
         </div>
         <div className="flex items-center gap-1.5 flex-shrink-0">
-          <a href={OSWT_ASSETS.inventoryList} target="_blank" rel="noopener noreferrer" className="text-xs text-[hsl(34,22%,62%)] hover:underline">McKesson List</a>
+          <a href={OSWT_ASSETS.inventoryList} target="_blank" rel="noopener noreferrer" className="text-xs text-emerald-200 hover:underline">McKesson List</a>
           <span className="text-muted-foreground text-xs">|</span>
-          <a href={OSWT_ASSETS.masterSupplyOrder} target="_blank" rel="noopener noreferrer" className="text-xs text-[hsl(34,22%,62%)] hover:underline">Master Order</a>
+          <a href={OSWT_ASSETS.masterSupplyOrder} target="_blank" rel="noopener noreferrer" className="text-xs text-emerald-200 hover:underline">Master Order</a>
           <span className="text-muted-foreground text-xs">|</span>
-          <a href={OSWT_ASSETS.checklist} target="_blank" rel="noopener noreferrer" className="text-xs text-[hsl(34,22%,62%)] hover:underline">Checklist</a>
+          <a href={OSWT_ASSETS.checklist} target="_blank" rel="noopener noreferrer" className="text-xs text-emerald-200 hover:underline">Checklist</a>
         </div>
       </div>
 
@@ -565,7 +570,7 @@ function DashboardScreen({
           <Button
             onClick={handleAnalyze}
             disabled={analysisLoading}
-            className="bg-[hsl(34,28%,38%)] hover:bg-[hsl(34,28%,44%)] text-[hsl(30,12%,94%)] px-6 min-w-[200px]"
+            className="bespoken-button px-6 min-w-[200px]"
           >
             {analysisLoading ? (
               <><FiLoader className="w-4 h-4 mr-2 animate-spin" />Analyzing...</>
@@ -718,13 +723,13 @@ function ScanScreen({
       <Card className="bg-card border-border">
         <CardHeader>
           <CardTitle className="font-serif text-foreground flex items-center gap-2">
-            <FiCamera className="w-5 h-5 text-[hsl(34,22%,62%)]" />
+            <FiCamera className="w-5 h-5 text-emerald-200" />
             Scan Product
           </CardTitle>
           <CardDescription className="text-muted-foreground">Scan a product QR code or enter details manually below.</CardDescription>
         </CardHeader>
         <CardContent>
-          <div className="relative w-full aspect-video max-h-48 bg-[hsl(20,30%,6%)] rounded-lg border-2 border-dashed border-[hsl(34,28%,38%)]/40 flex items-center justify-center mb-6">
+          <div className="relative w-full aspect-video max-h-48 bg-[hsl(20,30%,6%)] rounded-lg border-2 border-dashed border-emerald-700/40 flex items-center justify-center mb-6">
             {/* Viewfinder corners */}
             <div className="absolute top-3 left-3 w-6 h-6 border-t-2 border-l-2 border-[hsl(34,22%,62%)] rounded-tl-sm" />
             <div className="absolute top-3 right-3 w-6 h-6 border-t-2 border-r-2 border-[hsl(34,22%,62%)] rounded-tr-sm" />
@@ -792,7 +797,7 @@ function ScanScreen({
             <Button
               onClick={handleSubmitCount}
               disabled={scanLoading || !scanForm.product_id || !scanForm.clinic_id}
-              className="w-full bg-[hsl(34,28%,38%)] hover:bg-[hsl(34,28%,44%)] text-[hsl(30,12%,94%)]"
+              className="w-full bespoken-button"
             >
               {scanLoading ? (
                 <><FiLoader className="w-4 h-4 mr-2 animate-spin" />Submitting...</>
@@ -1035,7 +1040,7 @@ function OrderReviewScreen({
                       <Button variant="ghost" size="sm" onClick={() => toggleApproval(idx)} className={`h-8 w-8 p-0 ${rec.approved ? 'text-green-400 hover:text-green-300' : 'text-muted-foreground hover:text-foreground'}`}>
                         <FiCheck className="w-4 h-4" />
                       </Button>
-                      <Button variant="ghost" size="sm" onClick={() => removeItem(idx)} className="text-muted-foreground hover:text-red-400 h-8 w-8 p-0">
+                      <Button variant="ghost" size="sm" onClick={() => removeItem(idx)} className="text-muted-foreground hover:text-rose-300 h-8 w-8 p-0">
                         <FiX className="w-4 h-4" />
                       </Button>
                     </div>
@@ -1089,7 +1094,7 @@ function OrderReviewScreen({
             <Button
               onClick={handleApproveAndSend}
               disabled={orderLoading || approvedItems.length === 0 || !managerEmail.trim()}
-              className="bg-[hsl(34,28%,38%)] hover:bg-[hsl(34,28%,44%)] text-[hsl(30,12%,94%)] px-6"
+              className="bespoken-button px-6"
             >
               {orderLoading ? (
                 <><FiLoader className="w-4 h-4 mr-2 animate-spin" />Sending...</>
@@ -1226,7 +1231,7 @@ function InventoryListScreen({ inventory }: { inventory: InventoryItem[] }) {
                     <TableCell className="text-muted-foreground text-xs">{item.sku}</TableCell>
                     <TableCell className="text-foreground text-sm">{item.clinic_name}</TableCell>
                     <TableCell className="text-center">
-                      <span className={`font-bold text-sm ${item.current_count <= item.min_threshold ? 'text-red-400' : 'text-foreground'}`}>{item.current_count}</span>
+                      <span className={`font-bold text-sm ${item.current_count <= item.min_threshold ? 'text-rose-300' : 'text-foreground'}`}>{item.current_count}</span>
                     </TableCell>
                     <TableCell className="text-center text-muted-foreground text-sm">{item.min_threshold}</TableCell>
                     <TableCell>{getStatusBadge(item.status)}</TableCell>
@@ -1318,17 +1323,17 @@ function SettingsScreen({
     <div className="max-w-3xl mx-auto">
       <Tabs defaultValue="clinics">
         <TabsList className="bg-secondary border border-border w-full justify-start mb-6">
-          <TabsTrigger value="clinics" className="data-[state=active]:bg-[hsl(34,28%,38%)]/20 data-[state=active]:text-[hsl(34,22%,62%)]">Clinic Locations</TabsTrigger>
-          <TabsTrigger value="products" className="data-[state=active]:bg-[hsl(34,28%,38%)]/20 data-[state=active]:text-[hsl(34,22%,62%)]">Product Catalog</TabsTrigger>
-          <TabsTrigger value="notifications" className="data-[state=active]:bg-[hsl(34,28%,38%)]/20 data-[state=active]:text-[hsl(34,22%,62%)]">Notifications</TabsTrigger>
-          <TabsTrigger value="autoorder" className="data-[state=active]:bg-[hsl(34,28%,38%)]/20 data-[state=active]:text-[hsl(34,22%,62%)]">Auto-Order Rules</TabsTrigger>
+          <TabsTrigger value="clinics" className="data-[state=active]:bg-emerald-900/20 data-[state=active]:text-emerald-200">Clinic Locations</TabsTrigger>
+          <TabsTrigger value="products" className="data-[state=active]:bg-emerald-900/20 data-[state=active]:text-emerald-200">Product Catalog</TabsTrigger>
+          <TabsTrigger value="notifications" className="data-[state=active]:bg-emerald-900/20 data-[state=active]:text-emerald-200">Notifications</TabsTrigger>
+          <TabsTrigger value="autoorder" className="data-[state=active]:bg-emerald-900/20 data-[state=active]:text-emerald-200">Auto-Order Rules</TabsTrigger>
         </TabsList>
 
         {/* Clinic Locations */}
         <TabsContent value="clinics" className="space-y-4">
           <div className="flex items-center justify-between">
             <h3 className="font-serif font-semibold text-foreground">Clinics ({clinics.length})</h3>
-            <Button size="sm" onClick={() => setShowAddClinic(!showAddClinic)} className="bg-[hsl(34,28%,38%)] hover:bg-[hsl(34,28%,44%)] text-[hsl(30,12%,94%)]">
+            <Button size="sm" onClick={() => setShowAddClinic(!showAddClinic)} className="bespoken-button">
               <FiPlus className="w-4 h-4 mr-1" />Add Clinic
             </Button>
           </div>
@@ -1351,7 +1356,7 @@ function SettingsScreen({
                 </div>
                 <div className="flex justify-end gap-2">
                   <Button variant="outline" size="sm" onClick={() => { setShowAddClinic(false); setNewClinic({}) }} className="border-border">Cancel</Button>
-                  <Button size="sm" onClick={handleAddClinic} disabled={!newClinic.name?.trim()} className="bg-[hsl(34,28%,38%)] hover:bg-[hsl(34,28%,44%)] text-[hsl(30,12%,94%)]">Save</Button>
+                  <Button size="sm" onClick={handleAddClinic} disabled={!newClinic.name?.trim()} className="bespoken-button">Save</Button>
                 </div>
               </CardContent>
             </Card>
@@ -1368,7 +1373,7 @@ function SettingsScreen({
                   <Button variant="ghost" size="sm" onClick={() => setEditClinicDialog({ ...clinic })} className="text-muted-foreground hover:text-foreground h-8 w-8 p-0">
                     <FiEdit2 className="w-3.5 h-3.5" />
                   </Button>
-                  <Button variant="ghost" size="sm" onClick={() => setClinics(clinics.filter(c => c.id !== clinic.id))} className="text-muted-foreground hover:text-red-400 h-8 w-8 p-0">
+                  <Button variant="ghost" size="sm" onClick={() => setClinics(clinics.filter(c => c.id !== clinic.id))} className="text-muted-foreground hover:text-rose-300 h-8 w-8 p-0">
                     <FiTrash2 className="w-3.5 h-3.5" />
                   </Button>
                 </div>
@@ -1381,7 +1386,7 @@ function SettingsScreen({
         <TabsContent value="products" className="space-y-4">
           <div className="flex items-center justify-between">
             <h3 className="font-serif font-semibold text-foreground">Products ({products.length})</h3>
-            <Button size="sm" onClick={() => setShowAddProduct(!showAddProduct)} className="bg-[hsl(34,28%,38%)] hover:bg-[hsl(34,28%,44%)] text-[hsl(30,12%,94%)]">
+            <Button size="sm" onClick={() => setShowAddProduct(!showAddProduct)} className="bespoken-button">
               <FiPlus className="w-4 h-4 mr-1" />Add Product
             </Button>
           </div>
@@ -1410,7 +1415,7 @@ function SettingsScreen({
                 </div>
                 <div className="flex justify-end gap-2">
                   <Button variant="outline" size="sm" onClick={() => { setShowAddProduct(false); setNewProduct({}) }} className="border-border">Cancel</Button>
-                  <Button size="sm" onClick={handleAddProduct} disabled={!newProduct.name?.trim()} className="bg-[hsl(34,28%,38%)] hover:bg-[hsl(34,28%,44%)] text-[hsl(30,12%,94%)]">Save</Button>
+                  <Button size="sm" onClick={handleAddProduct} disabled={!newProduct.name?.trim()} className="bespoken-button">Save</Button>
                 </div>
               </CardContent>
             </Card>
@@ -1430,7 +1435,7 @@ function SettingsScreen({
                   <Button variant="ghost" size="sm" onClick={() => setEditProductDialog({ ...product })} className="text-muted-foreground hover:text-foreground h-8 w-8 p-0">
                     <FiEdit2 className="w-3.5 h-3.5" />
                   </Button>
-                  <Button variant="ghost" size="sm" onClick={() => setProducts(products.filter(p => p.id !== product.id))} className="text-muted-foreground hover:text-red-400 h-8 w-8 p-0">
+                  <Button variant="ghost" size="sm" onClick={() => setProducts(products.filter(p => p.id !== product.id))} className="text-muted-foreground hover:text-rose-300 h-8 w-8 p-0">
                     <FiTrash2 className="w-3.5 h-3.5" />
                   </Button>
                 </div>
@@ -1526,7 +1531,7 @@ function SettingsScreen({
           )}
           <DialogFooter>
             <Button variant="outline" onClick={() => setEditClinicDialog(null)} className="border-border">Cancel</Button>
-            <Button onClick={handleSaveClinic} className="bg-[hsl(34,28%,38%)] hover:bg-[hsl(34,28%,44%)] text-[hsl(30,12%,94%)]">Save</Button>
+            <Button onClick={handleSaveClinic} className="bespoken-button">Save</Button>
           </DialogFooter>
         </DialogContent>
       </Dialog>
@@ -1561,7 +1566,7 @@ function SettingsScreen({
           )}
           <DialogFooter>
             <Button variant="outline" onClick={() => setEditProductDialog(null)} className="border-border">Cancel</Button>
-            <Button onClick={handleSaveProduct} className="bg-[hsl(34,28%,38%)] hover:bg-[hsl(34,28%,44%)] text-[hsl(30,12%,94%)]">Save</Button>
+            <Button onClick={handleSaveProduct} className="bespoken-button">Save</Button>
           </DialogFooter>
         </DialogContent>
       </Dialog>
@@ -1585,13 +1590,13 @@ function AgentInfoPanel({ activeAgentId }: { activeAgentId: string | null }) {
           {agents.map(agent => {
             const isActive = activeAgentId === agent.id
             return (
-              <div key={agent.id} className={`flex items-center gap-3 p-2 rounded-lg text-xs transition-colors ${isActive ? 'bg-[hsl(34,28%,38%)]/15 border border-[hsl(34,28%,38%)]/30' : ''}`}>
+              <div key={agent.id} className={`flex items-center gap-3 p-2 rounded-lg text-xs transition-colors ${isActive ? 'bg-emerald-900/15 border border-emerald-700/30' : ''}`}>
                 <div className={`w-2 h-2 rounded-full flex-shrink-0 ${isActive ? 'bg-[hsl(34,22%,62%)] animate-pulse' : 'bg-muted-foreground/30'}`} />
                 <div className="flex-1 min-w-0">
-                  <span className={`font-medium ${isActive ? 'text-[hsl(34,22%,62%)]' : 'text-foreground'}`}>{agent.name}</span>
+                  <span className={`font-medium ${isActive ? 'text-emerald-200' : 'text-foreground'}`}>{agent.name}</span>
                   <p className="text-muted-foreground truncate">{agent.purpose}</p>
                 </div>
-                {isActive && <FiLoader className="w-3 h-3 animate-spin text-[hsl(34,22%,62%)] flex-shrink-0" />}
+                {isActive && <FiLoader className="w-3 h-3 animate-spin text-emerald-200 flex-shrink-0" />}
               </div>
             )
           })}
@@ -1637,8 +1642,8 @@ export default function Page() {
     return (
       <div className="min-h-screen bg-background text-foreground flex items-center justify-center">
         <div className="text-center">
-          <div className="w-10 h-10 rounded-lg bg-[hsl(34,28%,38%)] flex items-center justify-center mx-auto mb-3">
-            <FiCrosshair className="w-5 h-5 text-[hsl(30,12%,94%)]" />
+          <div className="w-10 h-10 rounded-lg bg-emerald-900 flex items-center justify-center mx-auto mb-3">
+            <FiCrosshair className="w-5 h-5 text-emerald-50" />
           </div>
           <p className="text-sm text-muted-foreground font-serif">Loading XTrackedOS...</p>
         </div>
