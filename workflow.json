@@ -1,0 +1,45 @@
+{
+  "nodes": [
+    {
+      "id": "input_node",
+      "type": "Input",
+      "label": "User Input",
+      "nodeCategory": "input"
+    },
+    {
+      "id": "inventory_update_agent",
+      "type": "Agent",
+      "label": "Inventory Update Agent",
+      "nodeCategory": "agent",
+      "agent_id": "69983a314855ba34a5a0eba7"
+    },
+    {
+      "id": "order_intelligence_agent",
+      "type": "Agent",
+      "label": "Order Intelligence Agent",
+      "nodeCategory": "agent",
+      "agent_id": "69983a320b3f0d6fd42f79f4"
+    },
+    {
+      "id": "notification_order_agent",
+      "type": "Agent",
+      "label": "Notification & Order Agent",
+      "nodeCategory": "agent",
+      "agent_id": "69983a480b3f0d6fd42f79f9"
+    }
+  ],
+  "edges": [
+    {
+      "source": "input_node",
+      "target": "inventory_update_agent"
+    },
+    {
+      "source": "inventory_update_agent",
+      "target": "order_intelligence_agent"
+    },
+    {
+      "source": "order_intelligence_agent",
+      "target": "notification_order_agent"
+    }
+  ]
+}

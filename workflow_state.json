@@ -1,0 +1,16 @@
+{
+  "agents": {
+    "inventory_update_agent": {
+      "agent_id": "69983a314855ba34a5a0eba7",
+      "name": "Inventory Update Agent"
+    },
+    "order_intelligence_agent": {
+      "agent_id": "69983a320b3f0d6fd42f79f4",
+      "name": "Order Intelligence Agent"
+    },
+    "notification_order_agent": {
+      "agent_id": "69983a480b3f0d6fd42f79f9",
+      "name": "Notification & Order Agent"
+    }
+  }
+}

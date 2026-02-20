@@ -1,0 +1,58 @@
+{
+  "agent_name": "Order Intelligence Agent",
+  "agent_id": "69983a320b3f0d6fd42f79f4",
+  "description": "Analyzes current inventory levels across all clinic locations, identifies items below minimum thresholds, calculates aggregate ordering need across sites, applies bulk-order logic, and generates a prioritized order recommendation with quantities, target clinics, and justification",
+  "agent_type": "json",
+  "accessor": "result",
+  "auto_generated": true,
+  "response_schema": {
+    "recommendations": [
+      {
+        "item_name": "string",
+        "sku": "string",
+        "total_quantity_needed": "number",
+        "breakdown_by_clinic": [
+          {
+            "clinic_name": "string",
+            "quantity": "number"
+          }
+        ],
+        "priority": "string",
+        "estimated_unit_cost": "number",
+        "justification": "string"
+      }
+    ],
+    "summary": {
+      "total_items_to_order": "number",
+      "total_estimated_cost": "number",
+      "clinics_affected": "number",
+      "analysis_timestamp": "string"
+    },
+    "message": "string"
+  },
+  "example_response": {
+    "recommendations": [
+      {
+        "item_name": "sample string",
+        "sku": "sample string",
+        "total_quantity_needed": 0,
+        "breakdown_by_clinic": [
+          {
+            "clinic_name": "sample string",
+            "quantity": 0
+          }
+        ],
+        "priority": "sample string",
+        "estimated_unit_cost": 0,
+        "justification": "sample string"
+      }
+    ],
+    "summary": {
+      "total_items_to_order": 0,
+      "total_estimated_cost": 0,
+      "clinics_affected": 0,
+      "analysis_timestamp": "sample string"
+    },
+    "message": "sample string"
+  }
+}

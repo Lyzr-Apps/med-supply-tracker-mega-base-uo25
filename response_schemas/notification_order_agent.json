@@ -1,0 +1,32 @@
+{
+  "agent_name": "Notification & Order Agent",
+  "agent_id": "69983a480b3f0d6fd42f79f9",
+  "agent_type": "json",
+  "accessor": "json",
+  "has_module_outputs": false,
+  "response_schema": {
+    "type": "object",
+    "properties": {
+      "emails_sent": {
+        "type": "array",
+        "items": {
+          "type": "object",
+          "properties": {
+            "email_type": { "type": "string" },
+            "recipient": { "type": "string" },
+            "subject": { "type": "string" },
+            "status": { "type": "string" },
+            "email_id": { "type": "string" }
+          },
+          "required": ["email_type", "recipient", "subject", "status", "email_id"],
+          "additionalProperties": false
+        }
+      },
+      "order_reference": { "type": "string" },
+      "total_emails_sent": { "type": "number" },
+      "message": { "type": "string" }
+    },
+    "required": ["emails_sent", "order_reference", "total_emails_sent", "message"],
+    "additionalProperties": false
+  }
+}

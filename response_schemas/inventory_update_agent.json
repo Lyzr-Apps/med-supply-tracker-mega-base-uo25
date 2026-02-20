@@ -1,0 +1,29 @@
+{
+  "agent_name": "Inventory Update Agent",
+  "agent_id": "69983a314855ba34a5a0eba7",
+  "agent_type": "json",
+  "accessor": "json",
+  "has_module_outputs": false,
+  "response_schema": {
+    "type": "object",
+    "properties": {
+      "product_id": { "type": "string" },
+      "product_name": { "type": "string" },
+      "clinic_id": { "type": "string" },
+      "clinic_name": { "type": "string" },
+      "current_count": { "type": "number" },
+      "previous_count": { "type": "number" },
+      "status": { "type": "string" },
+      "min_threshold": { "type": "number" },
+      "timestamp": { "type": "string" },
+      "validated": { "type": "boolean" },
+      "warnings": {
+        "type": "array",
+        "items": { "type": "string" }
+      },
+      "message": { "type": "string" }
+    },
+    "required": ["product_id", "product_name", "clinic_id", "clinic_name", "current_count", "previous_count", "status", "min_threshold", "timestamp", "validated", "warnings", "message"],
+    "additionalProperties": false
+  }
+}

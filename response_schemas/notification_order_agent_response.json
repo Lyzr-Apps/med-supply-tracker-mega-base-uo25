@@ -1,0 +1,36 @@
+{
+  "agent_name": "Notification & Order Agent",
+  "agent_id": "69983a480b3f0d6fd42f79f9",
+  "description": "Composes and sends email alerts for critical stock levels, order approval confirmations, and formatted purchase orders to suppliers; handles all outbound communication for the inventory manager",
+  "agent_type": "json",
+  "accessor": "result",
+  "auto_generated": true,
+  "response_schema": {
+    "emails_sent": [
+      {
+        "email_type": "string",
+        "recipient": "string",
+        "subject": "string",
+        "status": "string",
+        "email_id": "string"
+      }
+    ],
+    "order_reference": "string",
+    "total_emails_sent": "number",
+    "message": "string"
+  },
+  "example_response": {
+    "emails_sent": [
+      {
+        "email_type": "sample string",
+        "recipient": "sample string",
+        "subject": "sample string",
+        "status": "sample string",
+        "email_id": "sample string"
+      }
+    ],
+    "order_reference": "sample string",
+    "total_emails_sent": 0,
+    "message": "sample string"
+  }
+}

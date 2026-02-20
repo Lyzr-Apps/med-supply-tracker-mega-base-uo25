@@ -1,0 +1,40 @@
+{
+  "agent_name": "Inventory Update Agent",
+  "agent_id": "69983a314855ba34a5a0eba7",
+  "description": "Interprets QR scan input (product ID, location, count), validates the data against known product catalog and clinic locations, resolves ambiguities, and outputs a structured inventory update record for the app to persist",
+  "agent_type": "json",
+  "accessor": "result",
+  "auto_generated": true,
+  "response_schema": {
+    "product_id": "string",
+    "product_name": "string",
+    "clinic_id": "string",
+    "clinic_name": "string",
+    "current_count": "number",
+    "previous_count": "number",
+    "status": "string",
+    "min_threshold": "number",
+    "timestamp": "string",
+    "validated": "boolean",
+    "warnings": [
+      "string"
+    ],
+    "message": "string"
+  },
+  "example_response": {
+    "product_id": "sample string",
+    "product_name": "sample string",
+    "clinic_id": "sample string",
+    "clinic_name": "sample string",
+    "current_count": 0,
+    "previous_count": 0,
+    "status": "sample string",
+    "min_threshold": 0,
+    "timestamp": "sample string",
+    "validated": false,
+    "warnings": [
+      "sample string"
+    ],
+    "message": "sample string"
+  }
+}
