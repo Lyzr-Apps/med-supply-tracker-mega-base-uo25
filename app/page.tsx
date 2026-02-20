@@ -351,12 +351,13 @@ function StatusBanner({ message, onClose }: { message: StatusMessage; onClose: (
 
 // ─── Dashboard Screen ────────────────────────────────────────
 function DashboardScreen({
-  inventory, clinics, analysisLoading, setAnalysisLoading, setRecommendations,
+  inventory, clinics, products, analysisLoading, setAnalysisLoading, setRecommendations,
   setActiveScreen, setStatusMessage, activeAgentId, setActiveAgentId,
   selectedClinic, setSelectedClinic
 }: {
   inventory: InventoryItem[]
   clinics: Clinic[]
+  products: Product[]
   analysisLoading: boolean
   setAnalysisLoading: (v: boolean) => void
   setRecommendations: (r: OrderRecommendation[]) => void
@@ -1703,6 +1704,7 @@ export default function Page() {
                 <DashboardScreen
                   inventory={inventory}
                   clinics={clinics}
+                  products={products}
                   analysisLoading={analysisLoading}
                   setAnalysisLoading={setAnalysisLoading}
                   setRecommendations={setRecommendations}
