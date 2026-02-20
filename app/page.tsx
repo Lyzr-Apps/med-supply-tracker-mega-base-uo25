@@ -1,6 +1,6 @@
 'use client'
 
-import React, { useState, useMemo } from 'react'
+import React, { useState, useMemo, useEffect } from 'react'
 import { callAIAgent } from '@/lib/aiAgent'
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
@@ -23,6 +23,13 @@ import {
   FiChevronUp, FiLoader, FiSend, FiCrosshair, FiMapPin,
   FiActivity, FiClock, FiMail
 } from 'react-icons/fi'
+
+// ─── Hydration-safe mount tracker ────────────────────────────
+function useMounted() {
+  const [mounted, setMounted] = useState(false)
+  useEffect(() => { setMounted(true) }, [])
+  return mounted
+}
 
 // ─── Agent IDs ───────────────────────────────────────────────
 const INVENTORY_AGENT_ID = '69983a314855ba34a5a0eba7'
@@ -141,11 +148,18 @@ function getStatusBadge(status: string) {
   return <span className={`inline-flex items-center px-2 py-0.5 rounded-full text-xs font-medium ${config.bgClass}`}>{config.label}</span>
 }
 
-function formatDate(dateStr: string) {
+function formatDate(dateStr: string, mounted: boolean = true) {
   if (!dateStr) return 'N/A'
+  if (!mounted) return '\u00A0' // non-breaking space before mount to avoid mismatch
   try {
     const d = new Date(dateStr)
-    return d.toLocaleDateString('en-US', { month: 'short', day: 'numeric', hour: '2-digit', minute: '2-digit' })
+    const month = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'][d.getMonth()]
+    const day = d.getDate()
+    const hours = d.getHours()
+    const mins = d.getMinutes().toString().padStart(2, '0')
+    const ampm = hours >= 12 ? 'PM' : 'AM'
+    const h12 = hours % 12 || 12
+    return `${month} ${day}, ${h12}:${mins} ${ampm}`
   } catch (_e) {
     return dateStr
   }
@@ -1567,6 +1581,8 @@ function AgentInfoPanel({ activeAgentId }: { activeAgentId: string | null }) {
 
 // ─── Main Page ───────────────────────────────────────────────
 export default function Page() {
+  const mounted = useMounted()
+
   // Navigation
   const [activeScreen, setActiveScreen] = useState('dashboard')
   const [sidebarCollapsed, setSidebarCollapsed] = useState(false)
@@ -1593,6 +1609,20 @@ export default function Page() {
   const [activeAgentId, setActiveAgentId] = useState<string | null>(null)
 
   const notificationCount = inventory.filter(i => i.status === 'critical' || i.status === 'red').length
+
+  // Prevent hydration mismatch by rendering a loading shell until client mounts
+  if (!mounted) {
+    return (
+      <div className="min-h-screen bg-background text-foreground flex items-center justify-center">
+        <div className="text-center">
+          <div className="w-10 h-10 rounded-lg bg-[hsl(36,60%,31%)] flex items-center justify-center mx-auto mb-3">
+            <FiCrosshair className="w-5 h-5 text-[hsl(35,20%,95%)]" />
+          </div>
+          <p className="text-sm text-muted-foreground font-serif">Loading XTrackedOS...</p>
+        </div>
+      </div>
+    )
+  }
 
   return (
     <ErrorBoundary>
