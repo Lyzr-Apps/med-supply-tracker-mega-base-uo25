@@ -96,7 +96,7 @@ interface StatusMessage {
   text: string
 }
 
-// ─── Sample Data ─────────────────────────────────────────────
+// ─── OSWT Inventory Data (from McKesson OSWT SILO START + Master Supply Order List) ──
 const SAMPLE_CLINICS: Clinic[] = [
   { id: 'clinic-001', name: 'Desert Springs Clinic', address: '1420 E. Main St, Tucson, AZ', state: 'AZ', lat: 32.22, lng: -110.97 },
   { id: 'clinic-002', name: 'Red Rock Surgery Center', address: '780 Canyon Rd, Sedona, AZ', state: 'AZ', lat: 34.87, lng: -111.76 },
@@ -106,33 +106,60 @@ const SAMPLE_CLINICS: Clinic[] = [
 ]
 
 const SAMPLE_PRODUCTS: Product[] = [
-  { id: 'prod-001', name: 'Surgical Gloves (Box/100)', sku: 'SG-100', min_threshold: 10, max_threshold: 50 },
-  { id: 'prod-002', name: 'Sterile Gauze Pads', sku: 'SGP-200', min_threshold: 20, max_threshold: 100 },
-  { id: 'prod-003', name: 'Dental Anesthetic Cartridges', sku: 'DAC-50', min_threshold: 15, max_threshold: 60 },
-  { id: 'prod-004', name: 'Suture Kit (Chromic Gut)', sku: 'SK-CG-25', min_threshold: 8, max_threshold: 30 },
-  { id: 'prod-005', name: 'Disposable Scalpel Blades (#15)', sku: 'DSB-15', min_threshold: 12, max_threshold: 40 },
-  { id: 'prod-006', name: 'Bone Graft Material (0.5cc)', sku: 'BGM-05', min_threshold: 5, max_threshold: 20 },
-  { id: 'prod-007', name: 'Irrigation Syringes (12ml)', sku: 'IS-12', min_threshold: 15, max_threshold: 50 },
-  { id: 'prod-008', name: 'Hemostatic Agents', sku: 'HA-10', min_threshold: 6, max_threshold: 25 },
+  // McKesson OSWT SILO START products (extracted from OSWT Inventory List)
+  { id: 'prod-001', name: 'McKesson Exam Gloves (Nitrile, L)', sku: 'S636GX', min_threshold: 10, max_threshold: 50 },
+  { id: 'prod-002', name: 'McKesson Exam Gloves (Nitrile, M)', sku: 'SJ496GX', min_threshold: 10, max_threshold: 50 },
+  { id: 'prod-003', name: 'McKesson Exam Table Paper 21"x225\'', sku: '58-204', min_threshold: 8, max_threshold: 30 },
+  { id: 'prod-004', name: 'Graham Field Exam Table Paper', sku: '2990', min_threshold: 8, max_threshold: 30 },
+  { id: 'prod-005', name: 'Cardinal Exam Gloves (Latex, S)', sku: '8881400033', min_threshold: 6, max_threshold: 30 },
+  { id: 'prod-006', name: 'Cardinal Exam Gloves (Latex, M)', sku: '8881400058', min_threshold: 6, max_threshold: 30 },
+  { id: 'prod-007', name: 'C2R Rx Destroyer (Drug Disposal)', sku: 'RX16', min_threshold: 4, max_threshold: 15 },
+  { id: 'prod-008', name: 'Graham Medical Exam Table Paper 18"', sku: '43447', min_threshold: 8, max_threshold: 30 },
+  // Standard oral surgery supplies (from OSWT Master Supply Order List categories)
+  { id: 'prod-009', name: 'Dental Anesthetic Cartridges (Lido 2%)', sku: 'DAC-LIDO', min_threshold: 15, max_threshold: 60 },
+  { id: 'prod-010', name: 'Suture Kit (Chromic Gut 4-0)', sku: 'SK-CG40', min_threshold: 8, max_threshold: 30 },
+  { id: 'prod-011', name: 'Disposable Scalpel Blades (#15C)', sku: 'DSB-15C', min_threshold: 12, max_threshold: 40 },
+  { id: 'prod-012', name: 'Bone Graft Material (0.5cc)', sku: 'BGM-05CC', min_threshold: 5, max_threshold: 20 },
+  { id: 'prod-013', name: 'Irrigation Syringes (12ml Monoject)', sku: 'IS-12ML', min_threshold: 15, max_threshold: 50 },
+  { id: 'prod-014', name: 'Hemostatic Gelatin Sponge (Gelfoam)', sku: 'HGS-GF', min_threshold: 6, max_threshold: 25 },
+  { id: 'prod-015', name: 'Sterile Gauze 4x4 (Pk/200)', sku: 'SG-4X4', min_threshold: 10, max_threshold: 40 },
+  { id: 'prod-016', name: 'Surgical Aspirator Tips (Yankauer)', sku: 'SAT-YK', min_threshold: 10, max_threshold: 35 },
 ]
 
 const SAMPLE_INVENTORY: InventoryItem[] = [
-  { id: 'inv-001', product_id: 'prod-001', product_name: 'Surgical Gloves (Box/100)', sku: 'SG-100', clinic_id: 'clinic-001', clinic_name: 'Desert Springs Clinic', current_count: 35, min_threshold: 10, status: 'green', last_updated: '2026-02-20T08:30:00Z' },
-  { id: 'inv-002', product_id: 'prod-002', product_name: 'Sterile Gauze Pads', sku: 'SGP-200', clinic_id: 'clinic-001', clinic_name: 'Desert Springs Clinic', current_count: 45, min_threshold: 20, status: 'green', last_updated: '2026-02-20T08:30:00Z' },
-  { id: 'inv-003', product_id: 'prod-003', product_name: 'Dental Anesthetic Cartridges', sku: 'DAC-50', clinic_id: 'clinic-001', clinic_name: 'Desert Springs Clinic', current_count: 8, min_threshold: 15, status: 'red', last_updated: '2026-02-19T14:00:00Z' },
-  { id: 'inv-004', product_id: 'prod-004', product_name: 'Suture Kit (Chromic Gut)', sku: 'SK-CG-25', clinic_id: 'clinic-001', clinic_name: 'Desert Springs Clinic', current_count: 12, min_threshold: 8, status: 'green', last_updated: '2026-02-20T08:30:00Z' },
-  { id: 'inv-005', product_id: 'prod-001', product_name: 'Surgical Gloves (Box/100)', sku: 'SG-100', clinic_id: 'clinic-002', clinic_name: 'Red Rock Surgery Center', current_count: 12, min_threshold: 10, status: 'yellow', last_updated: '2026-02-19T16:00:00Z' },
-  { id: 'inv-006', product_id: 'prod-005', product_name: 'Disposable Scalpel Blades (#15)', sku: 'DSB-15', clinic_id: 'clinic-002', clinic_name: 'Red Rock Surgery Center', current_count: 3, min_threshold: 12, status: 'red', last_updated: '2026-02-18T10:00:00Z' },
-  { id: 'inv-007', product_id: 'prod-006', product_name: 'Bone Graft Material (0.5cc)', sku: 'BGM-05', clinic_id: 'clinic-002', clinic_name: 'Red Rock Surgery Center', current_count: 0, min_threshold: 5, status: 'critical', last_updated: '2026-02-17T09:00:00Z' },
-  { id: 'inv-008', product_id: 'prod-002', product_name: 'Sterile Gauze Pads', sku: 'SGP-200', clinic_id: 'clinic-003', clinic_name: 'High Plains Oral Surgery', current_count: 18, min_threshold: 20, status: 'yellow', last_updated: '2026-02-20T07:00:00Z' },
-  { id: 'inv-009', product_id: 'prod-007', product_name: 'Irrigation Syringes (12ml)', sku: 'IS-12', clinic_id: 'clinic-003', clinic_name: 'High Plains Oral Surgery', current_count: 5, min_threshold: 15, status: 'red', last_updated: '2026-02-19T11:00:00Z' },
-  { id: 'inv-010', product_id: 'prod-008', product_name: 'Hemostatic Agents', sku: 'HA-10', clinic_id: 'clinic-003', clinic_name: 'High Plains Oral Surgery', current_count: 0, min_threshold: 6, status: 'critical', last_updated: '2026-02-18T15:00:00Z' },
-  { id: 'inv-011', product_id: 'prod-001', product_name: 'Surgical Gloves (Box/100)', sku: 'SG-100', clinic_id: 'clinic-004', clinic_name: 'Mesquite Valley Dental', current_count: 28, min_threshold: 10, status: 'green', last_updated: '2026-02-20T09:00:00Z' },
-  { id: 'inv-012', product_id: 'prod-003', product_name: 'Dental Anesthetic Cartridges', sku: 'DAC-50', clinic_id: 'clinic-004', clinic_name: 'Mesquite Valley Dental', current_count: 22, min_threshold: 15, status: 'green', last_updated: '2026-02-20T09:00:00Z' },
-  { id: 'inv-013', product_id: 'prod-004', product_name: 'Suture Kit (Chromic Gut)', sku: 'SK-CG-25', clinic_id: 'clinic-005', clinic_name: 'Pecos River Clinic', current_count: 2, min_threshold: 8, status: 'red', last_updated: '2026-02-19T13:00:00Z' },
-  { id: 'inv-014', product_id: 'prod-005', product_name: 'Disposable Scalpel Blades (#15)', sku: 'DSB-15', clinic_id: 'clinic-005', clinic_name: 'Pecos River Clinic', current_count: 0, min_threshold: 12, status: 'critical', last_updated: '2026-02-17T16:00:00Z' },
-  { id: 'inv-015', product_id: 'prod-006', product_name: 'Bone Graft Material (0.5cc)', sku: 'BGM-05', clinic_id: 'clinic-005', clinic_name: 'Pecos River Clinic', current_count: 1, min_threshold: 5, status: 'red', last_updated: '2026-02-18T14:00:00Z' },
+  // Desert Springs Clinic — well stocked mostly, low on anesthetic
+  { id: 'inv-001', product_id: 'prod-001', product_name: 'McKesson Exam Gloves (Nitrile, L)', sku: 'S636GX', clinic_id: 'clinic-001', clinic_name: 'Desert Springs Clinic', current_count: 32, min_threshold: 10, status: 'green', last_updated: '2026-02-20T08:30:00Z' },
+  { id: 'inv-002', product_id: 'prod-003', product_name: 'McKesson Exam Table Paper 21"x225\'', sku: '58-204', clinic_id: 'clinic-001', clinic_name: 'Desert Springs Clinic', current_count: 18, min_threshold: 8, status: 'green', last_updated: '2026-02-20T08:30:00Z' },
+  { id: 'inv-003', product_id: 'prod-009', product_name: 'Dental Anesthetic Cartridges (Lido 2%)', sku: 'DAC-LIDO', clinic_id: 'clinic-001', clinic_name: 'Desert Springs Clinic', current_count: 7, min_threshold: 15, status: 'red', last_updated: '2026-02-19T14:00:00Z' },
+  { id: 'inv-004', product_id: 'prod-010', product_name: 'Suture Kit (Chromic Gut 4-0)', sku: 'SK-CG40', clinic_id: 'clinic-001', clinic_name: 'Desert Springs Clinic', current_count: 14, min_threshold: 8, status: 'green', last_updated: '2026-02-20T08:30:00Z' },
+  { id: 'inv-005', product_id: 'prod-015', product_name: 'Sterile Gauze 4x4 (Pk/200)', sku: 'SG-4X4', clinic_id: 'clinic-001', clinic_name: 'Desert Springs Clinic', current_count: 25, min_threshold: 10, status: 'green', last_updated: '2026-02-20T08:30:00Z' },
+  // Red Rock Surgery Center — low on several, critical bone graft
+  { id: 'inv-006', product_id: 'prod-002', product_name: 'McKesson Exam Gloves (Nitrile, M)', sku: 'SJ496GX', clinic_id: 'clinic-002', clinic_name: 'Red Rock Surgery Center', current_count: 11, min_threshold: 10, status: 'yellow', last_updated: '2026-02-19T16:00:00Z' },
+  { id: 'inv-007', product_id: 'prod-011', product_name: 'Disposable Scalpel Blades (#15C)', sku: 'DSB-15C', clinic_id: 'clinic-002', clinic_name: 'Red Rock Surgery Center', current_count: 3, min_threshold: 12, status: 'red', last_updated: '2026-02-18T10:00:00Z' },
+  { id: 'inv-008', product_id: 'prod-012', product_name: 'Bone Graft Material (0.5cc)', sku: 'BGM-05CC', clinic_id: 'clinic-002', clinic_name: 'Red Rock Surgery Center', current_count: 0, min_threshold: 5, status: 'critical', last_updated: '2026-02-17T09:00:00Z' },
+  { id: 'inv-009', product_id: 'prod-007', product_name: 'C2R Rx Destroyer (Drug Disposal)', sku: 'RX16', clinic_id: 'clinic-002', clinic_name: 'Red Rock Surgery Center', current_count: 6, min_threshold: 4, status: 'green', last_updated: '2026-02-19T16:00:00Z' },
+  // High Plains Oral Surgery — mixed, critical hemostatic
+  { id: 'inv-010', product_id: 'prod-015', product_name: 'Sterile Gauze 4x4 (Pk/200)', sku: 'SG-4X4', clinic_id: 'clinic-003', clinic_name: 'High Plains Oral Surgery', current_count: 9, min_threshold: 10, status: 'yellow', last_updated: '2026-02-20T07:00:00Z' },
+  { id: 'inv-011', product_id: 'prod-013', product_name: 'Irrigation Syringes (12ml Monoject)', sku: 'IS-12ML', clinic_id: 'clinic-003', clinic_name: 'High Plains Oral Surgery', current_count: 4, min_threshold: 15, status: 'red', last_updated: '2026-02-19T11:00:00Z' },
+  { id: 'inv-012', product_id: 'prod-014', product_name: 'Hemostatic Gelatin Sponge (Gelfoam)', sku: 'HGS-GF', clinic_id: 'clinic-003', clinic_name: 'High Plains Oral Surgery', current_count: 0, min_threshold: 6, status: 'critical', last_updated: '2026-02-18T15:00:00Z' },
+  { id: 'inv-013', product_id: 'prod-016', product_name: 'Surgical Aspirator Tips (Yankauer)', sku: 'SAT-YK', clinic_id: 'clinic-003', clinic_name: 'High Plains Oral Surgery', current_count: 22, min_threshold: 10, status: 'green', last_updated: '2026-02-20T07:00:00Z' },
+  // Mesquite Valley Dental — mostly stocked
+  { id: 'inv-014', product_id: 'prod-001', product_name: 'McKesson Exam Gloves (Nitrile, L)', sku: 'S636GX', clinic_id: 'clinic-004', clinic_name: 'Mesquite Valley Dental', current_count: 28, min_threshold: 10, status: 'green', last_updated: '2026-02-20T09:00:00Z' },
+  { id: 'inv-015', product_id: 'prod-009', product_name: 'Dental Anesthetic Cartridges (Lido 2%)', sku: 'DAC-LIDO', clinic_id: 'clinic-004', clinic_name: 'Mesquite Valley Dental', current_count: 22, min_threshold: 15, status: 'green', last_updated: '2026-02-20T09:00:00Z' },
+  { id: 'inv-016', product_id: 'prod-005', product_name: 'Cardinal Exam Gloves (Latex, S)', sku: '8881400033', clinic_id: 'clinic-004', clinic_name: 'Mesquite Valley Dental', current_count: 18, min_threshold: 6, status: 'green', last_updated: '2026-02-20T09:00:00Z' },
+  // Pecos River Clinic — critically low on multiple items
+  { id: 'inv-017', product_id: 'prod-010', product_name: 'Suture Kit (Chromic Gut 4-0)', sku: 'SK-CG40', clinic_id: 'clinic-005', clinic_name: 'Pecos River Clinic', current_count: 2, min_threshold: 8, status: 'red', last_updated: '2026-02-19T13:00:00Z' },
+  { id: 'inv-018', product_id: 'prod-011', product_name: 'Disposable Scalpel Blades (#15C)', sku: 'DSB-15C', clinic_id: 'clinic-005', clinic_name: 'Pecos River Clinic', current_count: 0, min_threshold: 12, status: 'critical', last_updated: '2026-02-17T16:00:00Z' },
+  { id: 'inv-019', product_id: 'prod-012', product_name: 'Bone Graft Material (0.5cc)', sku: 'BGM-05CC', clinic_id: 'clinic-005', clinic_name: 'Pecos River Clinic', current_count: 1, min_threshold: 5, status: 'red', last_updated: '2026-02-18T14:00:00Z' },
+  { id: 'inv-020', product_id: 'prod-008', product_name: 'Graham Medical Exam Table Paper 18"', sku: '43447', clinic_id: 'clinic-005', clinic_name: 'Pecos River Clinic', current_count: 3, min_threshold: 8, status: 'red', last_updated: '2026-02-18T14:00:00Z' },
 ]
+
+// ─── OSWT Reference Files (uploaded assets for agent context) ──
+const OSWT_ASSETS = {
+  checklist: 'https://asset.lyzr.app/CAqEhpNf',
+  inventoryList: 'https://asset.lyzr.app/QoqZ8ddl',
+  masterSupplyOrder: 'https://asset.lyzr.app/4P10SBS6',
+}
 
 // ─── Status Config ───────────────────────────────────────────
 const statusConfig: Record<string, { label: string; bgClass: string }> = {
@@ -378,7 +405,13 @@ function DashboardScreen({
         min_threshold: item.min_threshold,
         status: item.status,
       }))
-      const result = await callAIAgent(JSON.stringify(snapshot), ORDER_AGENT_ID)
+      const payload = {
+        context: 'OSWT (Oral Surgery Workforce Team) multi-location inventory. Products sourced from McKesson SILO START catalog and OSWT Master Supply Order List. Analyze and recommend bulk orders.',
+        inventory_snapshot: snapshot,
+        total_clinics: clinics.length,
+        total_products: products.length,
+      }
+      const result = await callAIAgent(JSON.stringify(payload), ORDER_AGENT_ID)
       if (result.success) {
         const data = result?.response?.result
         const recs = Array.isArray(data?.recommendations) ? data.recommendations : []
@@ -532,6 +565,26 @@ function DashboardScreen({
             </div>
           </CardContent>
         </Card>
+      </div>
+
+      {/* OSWT Data Source Banner */}
+      <div className="rounded-lg border border-[hsl(36,60%,31%)]/30 bg-[hsl(36,60%,31%)]/10 p-3 flex items-center gap-3">
+        <div className="w-8 h-8 rounded-md bg-[hsl(36,60%,31%)]/20 flex items-center justify-center flex-shrink-0">
+          <FiPackage className="w-4 h-4 text-[hsl(36,60%,50%)]" />
+        </div>
+        <div className="flex-1 min-w-0">
+          <p className="text-xs font-medium text-[hsl(36,60%,50%)]">OSWT Inventory Loaded</p>
+          <p className="text-xs text-muted-foreground mt-0.5 truncate">
+            Sourced from McKesson SILO START list, OSWT Master Supply Order, and Inventory Checklist ({products.length} products / {inventory.length} tracked items)
+          </p>
+        </div>
+        <div className="flex items-center gap-1.5 flex-shrink-0">
+          <a href={OSWT_ASSETS.inventoryList} target="_blank" rel="noopener noreferrer" className="text-xs text-[hsl(36,60%,50%)] hover:underline">McKesson List</a>
+          <span className="text-muted-foreground text-xs">|</span>
+          <a href={OSWT_ASSETS.masterSupplyOrder} target="_blank" rel="noopener noreferrer" className="text-xs text-[hsl(36,60%,50%)] hover:underline">Master Order</a>
+          <span className="text-muted-foreground text-xs">|</span>
+          <a href={OSWT_ASSETS.checklist} target="_blank" rel="noopener noreferrer" className="text-xs text-[hsl(36,60%,50%)] hover:underline">Checklist</a>
+        </div>
       </div>
 
       {/* Analyze CTA */}
@@ -879,6 +932,7 @@ function OrderReviewScreen({
     setStatusMessage({ type: 'info', text: 'Sending order confirmation and notifications...' })
     try {
       const payload = {
+        context: 'XTrackedOS / OSWT Inventory Management System — order approval for multi-location oral surgery practice. Products sourced from McKesson catalog.',
         approved_items: approvedItems.map(item => ({
           item_name: item.item_name,
           sku: item.sku,
