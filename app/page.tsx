@@ -558,7 +558,7 @@ function DashboardScreen({
             <div className="flex items-center justify-between">
               <div>
                 <p className="text-xs text-muted-foreground">Last Scan</p>
-                <p className="text-sm font-medium text-foreground">{formatDate(lastScan)}</p>
+                <p className="text-sm font-medium text-foreground">{formatDate(lastScan, mounted)}</p>
               </div>
               <div className="w-10 h-10 rounded-lg bg-secondary flex items-center justify-center">
                 <FiClock className="w-5 h-5 text-muted-foreground" />
@@ -641,7 +641,7 @@ function DashboardScreen({
                         <div className="mt-2 flex items-center gap-4 text-xs text-muted-foreground">
                           <span>Count: <span className="text-foreground font-medium">{item.current_count}</span></span>
                           <span>Min: {item.min_threshold}</span>
-                          <span>{formatDate(item.last_updated)}</span>
+                          <span>{formatDate(item.last_updated, mounted)}</span>
                         </div>
                       </CardContent>
                     </Card>
@@ -857,7 +857,7 @@ function ScanScreen({
                     <div className="flex items-center gap-3 mt-1 text-xs text-muted-foreground">
                       <span>{scan.clinic_name}</span>
                       <span>Count: {scan.current_count}</span>
-                      <span>{formatDate(scan.timestamp)}</span>
+                      <span>{formatDate(scan.timestamp, mounted)}</span>
                     </div>
                   </div>
                   {scan.validated && <FiCheck className="w-4 h-4 text-green-400 flex-shrink-0" />}
@@ -1263,7 +1263,7 @@ function InventoryListScreen({ inventory }: { inventory: InventoryItem[] }) {
                     </TableCell>
                     <TableCell className="text-center text-muted-foreground text-sm">{item.min_threshold}</TableCell>
                     <TableCell>{getStatusBadge(item.status)}</TableCell>
-                    <TableCell className="text-muted-foreground text-xs">{formatDate(item.last_updated)}</TableCell>
+                    <TableCell className="text-muted-foreground text-xs">{formatDate(item.last_updated, mounted)}</TableCell>
                   </TableRow>
                 ))
               )}
